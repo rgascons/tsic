@@ -29,7 +29,7 @@ private:
     static std::unique_ptr<PrototypeAST> ParsePrototype();
     static std::unique_ptr<FunctionAST> ParseDefinition();
 
-    static void Parser::HandleDefinition();;
+    static void HandleDefinition();;
 
    
 private:

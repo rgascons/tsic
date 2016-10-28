@@ -19,11 +19,13 @@
 
 using namespace llvm;
 
-
-LLVMContext TheContext;
-IRBuilder<> Builder = IRBuilder<>(TheContext);
-std::unique_ptr<Module> TheModule;
-std::map<std::string, Value*> NamedValues; 
+class Context {
+public:
+    static LLVMContext TheContext;
+    static IRBuilder<> Builder;
+    static std::unique_ptr<Module> TheModule;
+    static std::map<std::string, Value*> NamedValues; 
+};
 
 /// ExprAST - Base class for all expression nodes.
 class ExprAST {

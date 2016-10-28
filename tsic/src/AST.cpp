@@ -1,13 +1,17 @@
 #include "AST.h"
 #include "Error.h"
 
+LLVMContext Context::TheContext;
+IRBuilder<> Context::Builder = IRBuilder<>(TheContext);
+std::unique_ptr<Module> Context::TheModule;
+std::map<std::string, Value*> Context::NamedValues; 
 
 Value *NumberExprAST::codegen() {
-    return ConstantFP::get(TheContext, APFloat(Val));
+    return ConstantFP::get(Context::TheContext, APFloat(Val));
 }
 
 Value *VariableExprAST::codegen() {
-    Value *V = NamedValues[Name];
+    Value *V = Context::NamedValues[Name];
     if (!V)
         LogErrorV("Unknown variable name");
     return V;
@@ -22,21 +26,21 @@ Value *BinaryExprAST::codegen() {
     switch (Op)
     {
     case '+':
-        return Builder.CreateFAdd(L, R, "addtmp");
+        return Context::Builder.CreateFAdd(L, R, "addtmp");
     case '-':
-        return Builder.CreateFSub(L, R, "subtmp");
+        return Context::Builder.CreateFSub(L, R, "subtmp");
     case '*':
-        return Builder.CreateFMul(L, R, "multmp");
+        return Context::Builder.CreateFMul(L, R, "multmp");
     case '<':
-        L = Builder.CreateFCmpULT(L, R, "cmptmp");
-        return Builder.CreateUIToFP(L, Type::getDoubleTy(TheContext), "booltmp");
+        L = Context::Builder.CreateFCmpULT(L, R, "cmptmp");
+        return Context::Builder.CreateUIToFP(L, Type::getDoubleTy(Context::TheContext), "booltmp");
     default:
         return LogErrorV("Invalid binary operator");
     }
 }
 
 Value *CallExprAST::codegen() {
-    Function *CalleeF = TheModule->getFunction(Callee);
+    Function *CalleeF = Context::TheModule->getFunction(Callee);
     if (!CalleeF)
         return LogErrorV("Unknown function referenced");
 
@@ -50,13 +54,13 @@ Value *CallExprAST::codegen() {
             return nullptr;
     }
 
-    return Builder.CreateCall(CalleeF, ArgsV, "calltmp");
+    return Context::Builder.CreateCall(CalleeF, ArgsV, "calltmp");
 }
 
 Function *PrototypeAST::codegen() {
-    std::vector<Type*> Doubles(Args.size(), Type::getDoubleTy(TheContext));
-    FunctionType *FT = FunctionType::get(Type::getDoubleTy(TheContext), Doubles, false);
-    Function *F = Function::Create(FT, Function::ExternalLinkage, Name, TheModule.get());
+    std::vector<Type*> Doubles(Args.size(), Type::getDoubleTy(Context::TheContext));
+    FunctionType *FT = FunctionType::get(Type::getDoubleTy(Context::TheContext), Doubles, false);
+    Function *F = Function::Create(FT, Function::ExternalLinkage, Name, Context::TheModule.get());
 
     unsigned Idx = 0;
     for (auto &Arg : F->args())
@@ -66,7 +70,7 @@ Function *PrototypeAST::codegen() {
 }
 
 Function *FunctionAST::codegen() {
-    Function *TheFunction = TheModule->getFunction(Proto->getName());
+    Function *TheFunction = Context::TheModule->getFunction(Proto->getName());
 
     if (!TheFunction)
         TheFunction = Proto->codegen();
@@ -77,15 +81,15 @@ Function *FunctionAST::codegen() {
     if (!TheFunction->empty())
         return (Function*)LogErrorV("Function cannot be redefined");
 
-    BasicBlock *BB = BasicBlock::Create(TheContext, "entry", TheFunction);
-    Builder.SetInsertPoint(BB);
+    BasicBlock *BB = BasicBlock::Create(Context::TheContext, "entry", TheFunction);
+    Context::Builder.SetInsertPoint(BB);
 
-    NamedValues.clear();
+    Context::NamedValues.clear();
     for (auto &Arg : TheFunction->args())
-        NamedValues[Arg.getName()] = &Arg;
+        Context::NamedValues[Arg.getName()] = &Arg;
 
     if (Value *RetVal = Body->codegen()) {
-        Builder.CreateRet(RetVal);
+        Context::Builder.CreateRet(RetVal);
 
         verifyFunction(*TheFunction);
 

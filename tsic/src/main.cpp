@@ -14,7 +14,6 @@ int main() {
     fprintf(stderr, "ready> ");
     Parser::getNextToken();
 
-
     //// Run the main "interpreter loop" now.
     Parser::MainLoop();
 
