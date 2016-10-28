@@ -1,4 +1,4 @@
-#include "Error.h"
+#include "Utils/Error.h"
 
 std::unique_ptr<ExprAST> LogError(const char *Str) {
     fprintf(stderr, "LogError: %s\n", Str);

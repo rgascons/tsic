@@ -1,8 +1,8 @@
 #ifndef __TAISEI_PARSER__
 #define __TAISEI_PARSER__
 
-#include "Lexer.h"
-#include "AST.h"
+#include "Lex/Lexer.h"
+#include "AST/AST.h"
 
 #include <memory>
 #include <unordered_map>

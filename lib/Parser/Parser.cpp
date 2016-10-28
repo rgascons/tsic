@@ -10,8 +10,8 @@
 #include "llvm/IR/Type.h"
 #include "llvm/IR/Verifier.h"
 
-#include "Parser.h"
-#include "Error.h"
+#include "Parser/Parser.h"
+#include "Utils/Error.h"
 
 
 Token Parser::CurTok;
@@ -19,6 +19,7 @@ std::unordered_map<char, int> Parser::BinOpPrecedence;
 bool Parser::bBinOpPrecedenceInitialized = false;
 
 void Parser::MainLoop() {
+    Context::TheModule = llvm::make_unique<Module>("my cool jit", Context::TheContext);
     while (1) {
         fprintf(stderr, "ready> ");
         switch (CurTok) {

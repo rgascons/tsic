@@ -1,5 +1,5 @@
-#include "AST.h"
-#include "Error.h"
+#include "AST/AST.h"
+#include "Utils/Error.h"
 
 LLVMContext Context::TheContext;
 IRBuilder<> Context::Builder = IRBuilder<>(TheContext);

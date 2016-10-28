@@ -1,4 +1,4 @@
-#include "Lexer.h"
+#include "Lex/Lexer.h"
 
 
 bool Lexer::bTokenMapInitialized = false;

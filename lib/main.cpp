@@ -6,9 +6,8 @@
 #include <string>
 #include <vector>
 
-#include "Lexer.h"
-#include "Parser.h"
-
+#include "Lex/Lexer.h"
+#include "Parser/Parser.h"
 
 int main() {
     fprintf(stderr, "ready> ");
