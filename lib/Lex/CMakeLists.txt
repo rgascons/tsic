@@ -1,1 +1,4 @@
-add_library(taiseiLex Lexer.cpp)
+add_library(taiseiLex 
+	Lexer.cpp 
+	Token.cpp
+	)

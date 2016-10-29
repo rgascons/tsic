@@ -1,3 +1,4 @@
 add_library(taiseiUtils 
-	Error.cpp
+	tsic.cpp
+	tsici.cpp
 	)

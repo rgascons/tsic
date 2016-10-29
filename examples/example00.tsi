@@ -1,0 +1,19 @@
+
+Maybe :: type<T> {
+	Valid(T),
+	Invalid
+}
+
+addPositive :: (a : u32, b : u32) -> Maybe<u32> {
+	res = a + b;
+
+	if res < 0 {
+		return Invalid;
+	} else {
+		Valid(res)
+	}
+}
+
+main :: () {
+	printf("%n\n", addPositive(4, 8));
+}

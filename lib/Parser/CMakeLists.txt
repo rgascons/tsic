@@ -1,1 +1,3 @@
-add_library(taiseiParser Parser.cpp)
+add_library(taiseiParser 
+	Parser.cpp
+	)

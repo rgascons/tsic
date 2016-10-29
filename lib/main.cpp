@@ -6,18 +6,34 @@
 #include <string>
 #include <vector>
 
-#include "Lex/Lexer.h"
-#include "Parser/Parser.h"
+#include "tsic/tsic.h"
+#include "tsic/tsici.h"
+#include "Utils/InputParser.h"
 
-int main() {
-    fprintf(stderr, "ready> ");
-    Parser::getNextToken();
+int main(int argc, char** argv) {
+	InputParser input(argc, argv);
 
-    //// Run the main "interpreter loop" now.
-    Parser::MainLoop();
+	tsic::tsic *compiler;
+	int compiler_output;
 
-    //// Print out all of the generated code.
-    //TheModule->dump();
+	if(input.cmdOptionExists("-i") || input.cmdOptionExists("interactive")) {
+		compiler = new TsicInteractive();
+	} else {
+		compiler = new Tsic();
+	}
 
+	compiler_output = compiler->setOptions(input);
+
+	if(compiler_output != 0)
+		delete compiler;
+		return compiler_output;
+
+	compiler_output = compiler->run();
+
+	if(compiler_output != 0)
+		delete compiler;
+		return compiler_output;
+
+	delete compiler;
     return 0;
 }

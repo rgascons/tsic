@@ -23,7 +23,7 @@ void Parser::MainLoop() {
     while (1) {
         fprintf(stderr, "ready> ");
         switch (CurTok) {
-        case tok_eof:
+        case tok::eof:
             return;
         case ';':
             getNextToken();

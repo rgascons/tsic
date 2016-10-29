@@ -1,1 +1,3 @@
-add_library(taiseiAST AST.cpp)
+add_library(taiseiAST 
+	AST.cpp
+	)
