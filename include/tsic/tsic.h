@@ -14,11 +14,8 @@ public:
 protected:
 	InputParser &input;
 
-	// Pointer to the parser
-	Parser *parser;
-
-	// Pointer to the lexer
-	Lexer *lexer;
+	Parser parser;
+	Lexer lexer;
 }
 
 } // End tsic namespace
