@@ -3,7 +3,8 @@
 
 class InputParser {
 public:
+	InputParser();
 	InputParser(int &argc, char **argv);
-}
+};
 
 #endif

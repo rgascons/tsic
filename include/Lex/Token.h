@@ -5,23 +5,33 @@ namespace tsic {
 
 
 enum tok {
-    eof = -1,
+    Eof = -1,
 
     // commands
-    struct = -2,
-    def = -3,
-    extern = -4,
+    Struct = -2,
+    Def = -3,
+    Extern = -4,
 
     // primary
-    identifier = -5,
-    number = -6,
+    Identifier = -5,
+    Number = -6,
 };
 
 
 /// Token
 class Token {
+public:
+	Token(tok k);
+	Token(char c);
+
+	inline bool operator==(const char& rhs){ return true; }
+	inline bool operator!=(const char& rhs){ return !operator==(rhs); }
+
+	char as_char();
+
+private:
 	tok Kind;
-}
+};
 
 } // End tsic namespace
 

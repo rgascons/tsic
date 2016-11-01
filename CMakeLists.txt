@@ -14,7 +14,10 @@ find_package(LLVM REQUIRED CONFIG)
 message(STATUS "Found LLVM ${LLVM_PACKAGE_VERSION}")
 message(STATUS "Using LLVMCOnfig.cmake in: ${LLVM_DIR}")
 
-SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -fno-rtti")
+# Warnings
+# SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic")
+# Base flags
+SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -fno-rtti -fcolor-diagnostics ")
 
 include_directories("${LLVM_INCLUDE_DIRS}" "${tsic_SOURCE_DIR}/include")
 link_directories(${tsic_SOURCE_DIR}/src)

@@ -3,39 +3,49 @@
 
 #include "Lex/Lexer.h"
 #include "AST/AST.h"
+#include "Lex/Token.h"
 
 #include <memory>
 #include <unordered_map>
 
+namespace tsic {
+
+
 class Parser
 {
 public:
-    static void MainLoop(); 
+    Parser();
+    void MainLoop(); 
 
-    static Token getNextToken() {
-        return CurTok = Lexer::getTok();
+    Token getNextToken() {
+        return CurTok = lexer->getTok();
     }
 
 private:
-    static int GetTokPrecedence();
-    static void InitializeBinOpPrecedence();
+    int GetTokPrecedence();
+    void InitializeBinOpPrecedence();
 
-    static std::unique_ptr<ExprAST> ParseNumberExpr();
-    static std::unique_ptr<ExprAST> ParseParenExpr();
-    static std::unique_ptr<ExprAST> ParseIdentifierExpr();
-    static std::unique_ptr<ExprAST> ParsePrimary();
-    static std::unique_ptr<ExprAST> ParseExpression();
-    static std::unique_ptr<ExprAST> ParseBinOpRHS(int ExprPrec, std::unique_ptr<ExprAST> LHS);
-    static std::unique_ptr<PrototypeAST> ParsePrototype();
-    static std::unique_ptr<FunctionAST> ParseDefinition();
+    std::unique_ptr<ExprAST> ParseNumberExpr();
+    std::unique_ptr<ExprAST> ParseParenExpr();
+    std::unique_ptr<ExprAST> ParseIdentifierExpr();
+    std::unique_ptr<ExprAST> ParsePrimary();
+    std::unique_ptr<ExprAST> ParseExpression();
+    std::unique_ptr<ExprAST> ParseBinOpRHS(int ExprPrec, std::unique_ptr<ExprAST> LHS);
+    std::unique_ptr<PrototypeAST> ParsePrototype();
+    std::unique_ptr<FunctionAST> ParseDefinition();
 
-    static void HandleDefinition();;
+    void HandleDefinition();;
 
    
 private:
-    static Token CurTok;
-    static std::unordered_map<char, int> BinOpPrecedence;
-    static bool bBinOpPrecedenceInitialized;
+    Lexer *lexer;
+
+    Token CurTok;
+    std::unordered_map<char, int> BinOpPrecedence;
+    bool bBinOpPrecedenceInitialized;
 };
+
+
+} // End tsic namespace
 
 #endif

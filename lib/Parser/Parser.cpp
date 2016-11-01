@@ -12,18 +12,17 @@
 
 #include "Parser/Parser.h"
 #include "Utils/Error.h"
+#include "Lex/Token.h"
 
+namespace tsic {
 
-Token Parser::CurTok;
-std::unordered_map<char, int> Parser::BinOpPrecedence;
-bool Parser::bBinOpPrecedenceInitialized = false;
 
 void Parser::MainLoop() {
     Context::TheModule = llvm::make_unique<Module>("my cool jit", Context::TheContext);
     while (1) {
         fprintf(stderr, "ready> ");
-        switch (CurTok) {
-        case tok::eof:
+        switch (CurTok.as_char()) {
+        case tok::Eof:
             return;
         case ';':
             getNextToken();
@@ -36,7 +35,7 @@ void Parser::MainLoop() {
 }
 
 std::unique_ptr<ExprAST> Parser::ParseNumberExpr() {
-    auto result = llvm::make_unique<NumberExprAST>(Lexer::getNumVal());
+    auto result = llvm::make_unique<NumberExprAST>(lexer->getNumVal());
     getNextToken();
     return std::move(result);
 }
@@ -55,7 +54,7 @@ std::unique_ptr<ExprAST> Parser::ParseParenExpr() {
 }
 
 std::unique_ptr<ExprAST> Parser::ParseIdentifierExpr() {
-    std::string IdName = Lexer::getIdentifierStr();
+    std::string IdName = lexer->getIdentifierStr();
 
     getNextToken();
 
@@ -86,12 +85,12 @@ std::unique_ptr<ExprAST> Parser::ParseIdentifierExpr() {
 }
 
 std::unique_ptr<ExprAST> Parser::ParsePrimary() {
-    switch (CurTok) {
+    switch (CurTok.as_char()) {
     default:
         return LogError("Unknown token when expecting an expression");
-    case tok_identifier:
+    case tok::Identifier:
         return ParseIdentifierExpr();
-    case tok_number:
+    case tok::Number:
         return ParseNumberExpr();
     case '(':
         return ParseParenExpr();
@@ -127,23 +126,23 @@ std::unique_ptr<ExprAST> Parser::ParseBinOpRHS(int ExprPrec, std::unique_ptr<Exp
                 return nullptr;
         }
 
-        LHS = llvm::make_unique<BinaryExprAST>(BinOp, std::move(LHS), std::move(RHS));
+        LHS = llvm::make_unique<BinaryExprAST>(BinOp.as_char(), std::move(LHS), std::move(RHS));
     }
 }
 
 std::unique_ptr<PrototypeAST> Parser::ParsePrototype() {
-    if (CurTok != tok_identifier)
+    if (CurTok != tok::Identifier)
         return LogErrorP("Expected function name in prototype");
 
-    std::string FnName = Lexer::getIdentifierStr();
+    std::string FnName = lexer->getIdentifierStr();
     getNextToken();
 
     if (CurTok != '(')
         return LogErrorP("Expected '(' in prototype");
 
     std::vector<std::string> ArgNames;
-    while (getNextToken() == tok_identifier)
-        ArgNames.push_back(Lexer::getIdentifierStr());
+    while (getNextToken() == tok::Identifier)
+        ArgNames.push_back(lexer->getIdentifierStr());
     if (CurTok != ')')
         return LogErrorP("Expected ')' in prototype");
 
@@ -180,10 +179,10 @@ int Parser::GetTokPrecedence() {
     if (!bBinOpPrecedenceInitialized)
         InitializeBinOpPrecedence();
 
-    if (!isascii(CurTok))
+    if (!isascii(CurTok.as_char()))
         return -1;
 
-    int TokPrec = BinOpPrecedence[CurTok];
+    int TokPrec = BinOpPrecedence[CurTok.as_char()];
     if (TokPrec <= 0) return -1;
     return TokPrec;
 }
@@ -194,3 +193,6 @@ void Parser::InitializeBinOpPrecedence() {
     BinOpPrecedence['-'] = 30;
     BinOpPrecedence['*'] = 40;
 }
+
+
+} // End tsic namespace

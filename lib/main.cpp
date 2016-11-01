@@ -10,16 +10,17 @@
 #include "tsic/tsici.h"
 #include "Utils/InputParser.h"
 
+
 int main(int argc, char** argv) {
 	InputParser input(argc, argv);
 
-	tsic::tsic *compiler;
+	tsic::Tsic *compiler;
 	int compiler_output;
 
 	if(input.cmdOptionExists("-i") || input.cmdOptionExists("interactive")) {
-		compiler = new TsicInteractive();
+		compiler = new tsic::TsicInteractive();
 	} else {
-		compiler = new Tsic();
+		compiler = new tsic::Tsic();
 	}
 
 	compiler_output = compiler->setOptions(input);

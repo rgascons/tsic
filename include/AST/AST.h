@@ -1,5 +1,5 @@
-#ifndef __TAISEI_AST__
-#define __TAISEI_AST__
+#ifndef __TAISEI_AST_AST__
+#define __TAISEI_AST_AST__
 
 #include <string>
 #include <vector>
@@ -31,7 +31,8 @@ public:
 class ExprAST {
 public:
     virtual ~ExprAST() {}
-    virtual Value *codegen() = 0;
+
+    
 };
 
 /// NumberExprAST - Expression class for numeric literals like "1.0"

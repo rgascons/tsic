@@ -3,12 +3,18 @@
 
 #include "tsic/tsic.h"
 
+
+namespace tsic {
+
 class TsicInteractive : public Tsic {
 public:
 	TsicInteractive();
 	~TsicInteractive();
 
 	int run();
+}
+
+
 }
 
 #endif
