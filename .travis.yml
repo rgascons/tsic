@@ -1,13 +1,15 @@
 sudo: false
 language: cpp
 dist: trusty
+
 compiler:
   - clang
   - gcc
 os:
   - linux
 
-branches:
-  
+install:
+  - ./scripts/dependencies.sh
 
-notifications:
+script:
+  - ./scripts/build.sh
