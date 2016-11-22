@@ -5,10 +5,11 @@
 
 class Path {
 public:
+	Path();
 	Path(std::string path);
 
 private:
 	
-}
+};
 
 #endif
