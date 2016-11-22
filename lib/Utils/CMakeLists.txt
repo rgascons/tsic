@@ -1,3 +1,5 @@
-add_library(taiseiUtils 
-	Error.cpp
-		Path.cpp)
+add_library(taiseiUtils
+		Error.cpp
+		Path.cpp
+		InputParser.cpp
+		)
