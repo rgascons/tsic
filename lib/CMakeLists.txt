@@ -6,10 +6,11 @@ add_subdirectory(tsic)
 
 add_executable(tsic main.cpp)
 
-target_link_libraries(tsic 
-	taiseiLex 
-	taiseiParser 
-	taiseiUtils 
+target_link_libraries(tsic
+	taiseiLex
+	taiseiParser
+	taiseiUtils
+	tsicLib
 	taiseiAST
 	)
 
